@@ -12,14 +12,14 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-
     strategy:
       matrix:
         environment: [dev]
+    environment: ${{ matrix.environment }}
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
     steps:
     - name: Checkout
@@ -51,14 +51,14 @@ jobs:
       working-directory: environments/${{ matrix.environment }}
 
     - name: Terraform Plan
-      run: terraform plan -no-color
+      run: terraform plan -var="project_id=${{ secrets.GCP_PROJECT_ID }}" -no-color
       working-directory: environments/${{ matrix.environment }}
       env:
         GOOGLE_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply -auto-approve
+      run: terraform apply -var="project_id=${{ secrets.GCP_PROJECT_ID }}" -auto-approve
       working-directory: environments/${{ matrix.environment }}
       env:
         GOOGLE_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
