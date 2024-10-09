@@ -17,7 +17,7 @@ provider "google" {
 }
 
 resource "google_storage_bucket" "test_bucket" {
-  name          = "${var.project_id}-test-bucket"
+  name          = "${var.project_id}-test-bucket1"
   location      = var.region
   force_destroy = true
   storage_class = "STANDARD"
