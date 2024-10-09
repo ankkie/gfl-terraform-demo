@@ -14,6 +14,14 @@ provider "google" {
   region  = var.region
 }
 
+# Enable IAM Service Account Credentials API
+resource "google_project_service" "iam_credentials" {
+  project = var.project_id
+  service = "iamcredentials.googleapis.com"
+
+  disable_dependent_services = true
+}
+
 resource "google_storage_bucket" "terraform_state" {
   name          = "${var.project_id}-terraform-state"
   location      = var.region
